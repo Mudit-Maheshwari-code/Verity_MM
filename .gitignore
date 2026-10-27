@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+apps/web/node_modules/
+apps/api/node_modules/
+packages/shared/node_modules/
+
+# Build outputs
+dist/
+apps/web/dist/
+apps/api/dist/
+
+# Environment — NEVER commit this
+.env
+
+# TypeScript cache
+*.tsbuildinfo
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+venv/
+
+# Scraper cache
+scrapers/cache.db
+__pycache__/
+*.pyc
