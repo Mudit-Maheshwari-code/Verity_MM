@@ -30,7 +30,8 @@ export default function ResultsPage() {
     setData(null);
     setActiveTab('all');
     try {
-      const res = await fetch('/api/search', {
+      const apiBase = import.meta.env.VITE_API_BASE_URL || '';
+      const res = await fetch(`${apiBase}/api/search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: q }),
