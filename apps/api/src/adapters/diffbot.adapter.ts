@@ -317,36 +317,7 @@ export class DiffbotAdapter extends BaseAdapter {
 
       let posts: DiffbotPost[] = productResult.posts;
 
-      // ── Step 2: Fallback to dedicated reviews page or Discussion API ──────
-      if (posts.length === 0) {
-        console.log(`[Diffbot] No reviews in Product API response; attempting Discussion API...`);
-
-        // Check if Amazon ASIN is present to target the dedicated review thread
-        const asinMatch = this.url.match(/(?:\/dp\/|\/gp\/product\/|\/product-reviews\/)([A-Z0-9]{10})/i);
-        const reviewUrl = asinMatch
-          ? `https://www.amazon.in/product-reviews/${asinMatch[1]}`
-          : this.url;
-
-        const discussionResult = await this.callDiscussionApi(reviewUrl);
-        if (discussionResult.posts.length > 0) {
-          posts = discussionResult.posts;
-          if (!listingTitle && discussionResult.title && !/(?:1996-|amazon\.com|robot check)/i.test(discussionResult.title)) {
-            listingTitle = discussionResult.title;
-          }
-        }
-      }
-
-      // ── Step 3: Fallback to Analyze API if still empty ─────────────────────
-      if (posts.length === 0 && !listingTitle) {
-        console.log(`[Diffbot] Attempting Analyze API for dynamic page classification...`);
-        const analyzeResult = await this.callAnalyzeApi(this.url);
-        posts = analyzeResult.posts;
-        if (analyzeResult.title) {
-          listingTitle = analyzeResult.title;
-        }
-      }
-
-      // ── Step 4: Map Diffbot posts to Verity canonical Review objects ───────
+      // ── Step 2: Map Diffbot posts to Verity canonical Review objects ───────
       const reviews: Review[] = posts.map((post, index): Review => {
         const id = post.diffbotUri || `${this.sourceId}:${post.id ?? index}`;
         const rating = extractRating(post);
@@ -405,14 +376,14 @@ export class DiffbotAdapter extends BaseAdapter {
       token: this.token,
       url: targetUrl,
       discussion: 'true', // extract product reviews by default
-      timeout: 35000,
+      timeout: 8000,
     };
 
     try {
       const res = await axios.get<DiffbotExtractResponse>(endpoint, {
         params,
         headers: { Accept: 'application/json' },
-        timeout: 45000,
+        timeout: 10000,
       });
 
       this.checkDiffbotErrors(res.data);

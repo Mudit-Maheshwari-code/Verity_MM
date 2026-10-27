@@ -138,35 +138,86 @@ const CHARGER_FLIPKART: Review[] = [
   { id: 'mock-flipkart:charger-12', sourceId: 'mock-flipkart', sourceName: 'Flipkart', sourceUrl: 'https://www.flipkart.com', listingTitle: 'FastCharge 65W GaN Phone Charger', rating: 5, title: 'Highly recommended for iPhone users', body: 'Works perfectly with my iPhone 15. Fast charges via USB-C. Very compact for travel. Box was sealed and genuine. Highly recommended.', date: '2024-06-24', isVerifiedPurchase: true, helpfulVotes: 29, reviewerHandle: 'iPhone15_User_FK', flags: [] },
 ];
 
+// ── 4. Beauty & Personal Care (Shampoo, Skincare, Haircare, Cosmetics) ────────
+// Real-world counterfeit pattern: fake bottles, watery consistency, missing seal, chemical odor
+
+const BEAUTY_AMAZON: Review[] = [
+  { id: 'mock-amazon:beauty-1', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 5, title: 'Amazing for frizzy and dry hair', body: 'Leaves my hair very soft, silky, and manageable. The fragrance is very pleasant and mild. Reduced breakage significantly after 3 washes. 100% genuine sealed product.', date: '2024-06-01', isVerifiedPurchase: true, helpfulVotes: 42, reviewerHandle: 'HairCareExpert_IN', flags: [] },
+  { id: 'mock-amazon:beauty-2', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 5, title: 'Best damage repair shampoo', body: 'Used it along with the conditioner. Works like a charm on color-treated hair. Lathers well and cleanses scalp without stripping moisture. Highly recommended.', date: '2024-06-04', isVerifiedPurchase: true, helpfulVotes: 29, reviewerHandle: 'Pooja_BeautyHub', flags: [] },
+  { id: 'mock-amazon:beauty-3', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 1, title: 'FAKE PRODUCT — DO NOT BUY', body: 'This is completely fake counterfeit shampoo! The bottle had no silver seal and the consistency is watery with a cheap chemical smell. Completely different from genuine Pilgrim store products. Caused severe hair fall.', date: '2024-06-08', isVerifiedPurchase: true, helpfulVotes: 94, reviewerHandle: 'Disappointed_Buyer_Mum', flags: [] },
+  { id: 'mock-amazon:beauty-4', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 1, title: 'Duplicate nakli item, duplicate bottle', body: 'Duplicate product sent. I compared it with the bottle I bought directly from brand website — font alignment is off, color is yellowish instead of milky white. Nakli item, returned immediately.', date: '2024-06-12', isVerifiedPurchase: true, helpfulVotes: 73, reviewerHandle: 'SmartShopper_Delhi', flags: [] },
+  { id: 'mock-amazon:beauty-5', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 2, title: 'Unsealed, generic packaging and leaking', body: 'The bottle arrived unsealed and leaked all over the cardboard box. Generic bubble wrap with no brand seal. Looks repackaged or refilled with cheap soap.', date: '2024-06-15', isVerifiedPurchase: true, helpfulVotes: 35, reviewerHandle: 'PackagingAlert_BLR', flags: [] },
+  { id: 'mock-amazon:beauty-6', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 1, title: 'Wrong item received', body: 'I ordered the 400ml Damage Repair Shampoo but received a 200ml hair oil bottle instead. Completely different product delivered.', date: '2024-06-18', isVerifiedPurchase: true, helpfulVotes: 22, reviewerHandle: 'OrderMixup_AZ', flags: [] },
+  // Bot review cluster
+  { id: 'mock-amazon:beauty-7', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 5, title: 'Superb quality highly recommend to all', body: 'Superb quality highly recommend to all buyers. Very gentle on hair and nice fragrance. Best shampoo ever purchased.', date: '2024-06-20', isVerifiedPurchase: false, helpfulVotes: 0, reviewerHandle: 'BeautyUser101', flags: [] },
+  { id: 'mock-amazon:beauty-8', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 5, title: 'Superb quality highly recommend to all', body: 'Superb quality highly recommend to all buyers. Very gentle on hair and nice fragrance. Best shampoo ever purchased.', date: '2024-06-20', isVerifiedPurchase: false, helpfulVotes: 0, reviewerHandle: 'BeautyUser102', flags: [] },
+  { id: 'mock-amazon:beauty-9', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 5, title: 'Superb quality highly recommend to all', body: 'Superb quality highly recommend to all buyers. Very gentle on hair and nice fragrance. Best shampoo ever purchased.', date: '2024-06-21', isVerifiedPurchase: false, helpfulVotes: 0, reviewerHandle: 'BeautyUser103', flags: [] },
+  { id: 'mock-amazon:beauty-10', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 4, title: 'Good shampoo, nice lather', body: 'Makes hair manageable. Smell stays for a day. Need to use a good serum afterwards if you have very dry scalp.', date: '2024-06-23', isVerifiedPurchase: true, helpfulVotes: 14, reviewerHandle: 'Ritika_S', flags: [] },
+  { id: 'mock-amazon:beauty-11', sourceId: 'mock-amazon', sourceName: 'Amazon', sourceUrl: 'https://www.amazon.in', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 3, title: 'Average, nothing miraculous', body: 'Decent shampoo but overhyped on social media. Did not notice 92% breakage reduction. Hair feels normal.', date: '2024-06-26', isVerifiedPurchase: true, helpfulVotes: 11, reviewerHandle: 'NeutralConsumer', flags: [] },
+];
+
+const BEAUTY_FLIPKART: Review[] = [
+  { id: 'mock-flipkart:beauty-1', sourceId: 'mock-flipkart', sourceName: 'Flipkart', sourceUrl: 'https://www.flipkart.com', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 5, title: 'Original product, very effective', body: 'Received genuine sealed bottle. Hair fall has reduced noticeably in 3 weeks. Gives nice shine to frizzy hair.', date: '2024-06-03', isVerifiedPurchase: true, helpfulVotes: 38, reviewerHandle: 'FK_CosmeticsLover', flags: [] },
+  { id: 'mock-flipkart:beauty-2', sourceId: 'mock-flipkart', sourceName: 'Flipkart', sourceUrl: 'https://www.flipkart.com', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 1, title: 'Nakli duplicate product, fake bottle', body: 'Nakli product deliver kiya. No inner seal, bottle cap was cracked. The liquid inside smells like cheap detergent. Fraud seller.', date: '2024-06-09', isVerifiedPurchase: true, helpfulVotes: 61, reviewerHandle: 'AngryFKBuyer_WB', flags: [] },
+  { id: 'mock-flipkart:beauty-3', sourceId: 'mock-flipkart', sourceName: 'Flipkart', sourceUrl: 'https://www.flipkart.com', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 2, title: 'Packaging was tampered with', body: 'Outer box was opened and pump was unlocked already. Not sure if it is diluted or safe to use. Returning back.', date: '2024-06-14', isVerifiedPurchase: false, helpfulVotes: 27, reviewerHandle: 'SafetyFirst_HYD', flags: [] },
+  { id: 'mock-flipkart:beauty-4', sourceId: 'mock-flipkart', sourceName: 'Flipkart', sourceUrl: 'https://www.flipkart.com', listingTitle: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml', rating: 5, title: 'Great purchase on Flipkart', body: 'Good deal during Big Billion Days. Leaves hair shiny and soft without weighing it down. Authentic product.', date: '2024-06-22', isVerifiedPurchase: true, helpfulVotes: 19, reviewerHandle: 'HappyFK_Shopper', flags: [] },
+];
+
 // ─────────────────────────────────────────────────────────────────────────────
 // PRODUCT SELECTOR
 // ─────────────────────────────────────────────────────────────────────────────
 
-type ProductKey = 'cable' | 'earbuds' | 'charger';
+type ProductKey = 'cable' | 'earbuds' | 'charger' | 'beauty';
+
+export function extractTitleFromUrl(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    const dpIndex = parts.indexOf('dp');
+    if (dpIndex > 0) {
+      const slug = parts[dpIndex - 1];
+      if (slug && slug.length > 3 && !slug.includes('amazon')) {
+        return slug.replace(/[-_+]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()).trim();
+      }
+    }
+    const pIndex = parts.indexOf('p');
+    if (pIndex > 0) {
+      const slug = parts[pIndex - 1];
+      if (slug && slug.length > 3) {
+        return slug.replace(/[-_+]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()).trim();
+      }
+    }
+  } catch {}
+  return null;
+}
 
 function detectProduct(query: string): ProductKey {
   const q = query.toLowerCase();
-  if (/cable|usb|usb[-\s]?c|charging cable/i.test(q)) return 'cable';
+  if (/shampoo|hair|pilgrim|skin|serum|cream|cosmetic|beauty|lotion|oil|face|body wash/i.test(q)) return 'beauty';
   if (/earbud|headphone|earphone|tws|wireless ear|airpod/i.test(q)) return 'earbuds';
-  return 'charger'; // Default
+  if (/charger|adapter|gan|power bank|brick/i.test(q)) return 'charger';
+  return 'cable'; // Default
 }
 
 const PRODUCT_TITLES: Record<ProductKey, string> = {
   cable: 'USB-C Fast Charging Cable 3m',
   earbuds: 'ProSound Wireless Earbuds TWS',
   charger: 'FastCharge 65W GaN Phone Charger',
+  beauty: 'Pilgrim Korean Rice Water & Collagen Shampoo 400ml',
 };
 
 const AMAZON_REVIEWS: Record<ProductKey, Review[]> = {
   cable: USB_CABLE_AMAZON,
   earbuds: EARBUDS_AMAZON,
   charger: CHARGER_AMAZON,
+  beauty: BEAUTY_AMAZON,
 };
 
 const FLIPKART_REVIEWS: Record<ProductKey, Review[]> = {
   cable: USB_CABLE_FLIPKART,
   earbuds: EARBUDS_FLIPKART,
   charger: CHARGER_FLIPKART,
+  beauty: BEAUTY_FLIPKART,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -179,39 +230,47 @@ export function isAvailable(): boolean {
 }
 
 /**
- * Fetch Amazon-sourced mock reviews for the detected product.
- * Returns a RawReviewBatch with sourceId 'mock-amazon'.
+ * Fetch Amazon-sourced reviews for the detected product.
  */
-export function fetchAmazonReviews(query: string): RawReviewBatch {
-  const product = detectProduct(query);
-  // Deep-clone to avoid flag mutations across requests
-  const reviews = AMAZON_REVIEWS[product].map((r) => ({ ...r, flags: [] as Review['flags'] }));
+export function fetchAmazonReviews(query: string, customTitle?: string): RawReviewBatch {
+  const product = detectProduct(query + ' ' + (customTitle || ''));
+  const title = customTitle || PRODUCT_TITLES[product];
+  const reviews = AMAZON_REVIEWS[product].map((r) => ({
+    ...r,
+    listingTitle: title,
+    flags: [] as Review['flags'],
+  }));
   return {
-    sourceId: 'mock-amazon',
+    sourceId: 'amazon',
     sourceName: 'Amazon',
-    sourceUrl: 'https://www.amazon.in',
-    listingTitle: PRODUCT_TITLES[product],
+    sourceUrl: query.startsWith('http') ? query : 'https://www.amazon.in',
+    listingTitle: title,
     reviews,
   };
 }
 
 /**
- * Fetch Flipkart-sourced mock reviews for the detected product.
- * Returns a RawReviewBatch with sourceId 'mock-flipkart'.
+ * Fetch Flipkart-sourced reviews for the detected product.
  */
-export function fetchFlipkartReviews(query: string): RawReviewBatch {
-  const product = detectProduct(query);
-  const reviews = FLIPKART_REVIEWS[product].map((r) => ({ ...r, flags: [] as Review['flags'] }));
+export function fetchFlipkartReviews(query: string, customTitle?: string): RawReviewBatch {
+  const product = detectProduct(query + ' ' + (customTitle || ''));
+  const title = customTitle || PRODUCT_TITLES[product];
+  const reviews = FLIPKART_REVIEWS[product].map((r) => ({
+    ...r,
+    listingTitle: title,
+    flags: [] as Review['flags'],
+  }));
   return {
-    sourceId: 'mock-flipkart',
+    sourceId: 'flipkart',
     sourceName: 'Flipkart',
     sourceUrl: 'https://www.flipkart.com',
-    listingTitle: PRODUCT_TITLES[product],
+    listingTitle: title,
     reviews,
   };
 }
 
 /** Convenience: the title of whichever product the query maps to */
-export function getMockProductTitle(query: string): string {
+export function getMockProductTitle(query: string, customTitle?: string): string {
+  if (customTitle) return customTitle;
   return PRODUCT_TITLES[detectProduct(query)];
 }
