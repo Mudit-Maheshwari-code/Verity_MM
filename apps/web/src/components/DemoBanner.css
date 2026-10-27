@@ -1,0 +1,68 @@
+.demo-banner {
+  background: linear-gradient(135deg, #FFF4E0 0%, #FDEDC8 100%);
+  border-bottom: 1px solid #E8C97A;
+  border-top: 3px solid var(--score-mid);
+}
+
+.demo-banner__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.demo-banner__icon {
+  font-size: var(--text-base);
+  color: var(--score-mid);
+  flex-shrink: 0;
+}
+
+.demo-banner__text {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: #6B5A1A;
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+.demo-banner__text strong {
+  font-weight: 600;
+  color: #5A4A14;
+}
+
+.demo-banner__link {
+  color: var(--score-mid);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.demo-banner__link:hover {
+  color: #6B5A14;
+}
+
+.demo-banner__dismiss {
+  background: none;
+  border: none;
+  color: #8B7A2E;
+  font-size: 20px;
+  line-height: 1;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.demo-banner__dismiss:hover {
+  background: rgba(139, 122, 46, 0.12);
+  color: #5A4A14;
+}
+
+@media (max-width: 640px) {
+  .demo-banner__inner {
+    padding: var(--space-3) var(--space-4);
+  }
+}
