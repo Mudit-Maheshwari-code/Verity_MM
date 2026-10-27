@@ -59,7 +59,7 @@ Verity acts as an independent inspection layer between the buyer and the marketp
   - *Diffbot Extract API* (`Product API` & `Discussion API`): Primary cloud extraction engine with JavaScript rendering and ML parsing.
   - *Playwright* (Python 3): Secondary local headless browser scraper fallback.
 - **NLP & Analysis**: `natural`, `sentiment`, `compromise`
-- **Caching**: `lru-cache` (API tier) + SQLite (scraper cache)
+- **Database & Persistence**: PostgreSQL (`pg` pool with automatic table schema migration) + in-memory `lru-cache`
 - **Monorepo**: npm workspaces (`packages/shared`, `apps/api`, `apps/web`)
 
 ---
@@ -227,6 +227,7 @@ npm run build
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `DIFFBOT_TOKEN` | Optional | — | Primary cloud extraction token for rendering & parsing e-commerce listings |
+| `DATABASE_URL` | Optional | — | PostgreSQL connection string for permanent report persistence (auto-creates tables) |
 | `PORT` | No | `3001` | Port for the Express backend API server |
 | `CACHE_TTL_MINUTES` | No | `60` | In-memory LRU cache time-to-live for extracted reports |
 

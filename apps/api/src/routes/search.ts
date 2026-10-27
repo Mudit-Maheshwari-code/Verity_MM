@@ -12,6 +12,7 @@ import { PlaywrightScraperAdapter } from '../adapters/playwright-scraper.adapter
 import { normalizeReviews } from '../normalizer';
 import { analyzeReviews } from '../analysis';
 import { getCached, setCached, normalizeCacheKey } from '../cache';
+import { getReportFromDb, saveReport } from '../db';
 
 const router = Router();
 
@@ -39,8 +40,17 @@ router.post('/', async (req: Request, res: Response) => {
   // ── Cache hit ───────────────────────────────────────────────────────────────
   const cached = getCached(cacheKey);
   if (cached) {
-    console.log(`[Search] Cache hit for: "${q}"`);
+    console.log(`[Search] In-memory cache hit for: "${q}"`);
     return res.json(cached);
+  }
+
+  // Check persistent PostgreSQL cache
+  const dbCached = await getReportFromDb(cacheKey);
+  if (dbCached) {
+    console.log(`[Search] Database cache hit for: "${q}"`);
+    setCached(cacheKey, dbCached);
+    if (dbCached.cacheId) setCached(dbCached.cacheId, dbCached);
+    return res.json(dbCached);
   }
 
   console.log(`[Search] Fetching reviews for: "${q}"`);
@@ -151,6 +161,11 @@ router.post('/', async (req: Request, res: Response) => {
   setCached(cacheKey, response);
   // Also index by cacheId for shareable links via GET /api/product/:cacheId
   setCached(response.cacheId, response);
+
+  // Persist to PostgreSQL database asynchronously
+  saveReport(response.cacheId, cacheKey, response, isUrl ? q : undefined).catch((err) =>
+    console.error(`[Search] Failed to persist report to DB: ${err.message}`)
+  );
 
   return res.json(response);
 });
