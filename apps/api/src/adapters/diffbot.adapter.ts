@@ -310,16 +310,27 @@ export class DiffbotAdapter extends BaseAdapter {
       const productResult = await this.callProductApi(this.url);
 
       let listingTitle = productResult.title;
+      // Filter out boilerplate copyright or robot-check titles
+      if (listingTitle && /(?:1996-|amazon\.com|robot check|captcha|access denied)/i.test(listingTitle)) {
+        listingTitle = undefined;
+      }
+
       let posts: DiffbotPost[] = productResult.posts;
 
-      // ── Step 2: Fallback to Discussion API if reviews are empty ────────────
-      // If the page is a dedicated reviews thread or discussion section wasn't captured in product API
+      // ── Step 2: Fallback to dedicated reviews page or Discussion API ──────
       if (posts.length === 0) {
         console.log(`[Diffbot] No reviews in Product API response; attempting Discussion API...`);
-        const discussionResult = await this.callDiscussionApi(this.url);
+
+        // Check if Amazon ASIN is present to target the dedicated review thread
+        const asinMatch = this.url.match(/(?:\/dp\/|\/gp\/product\/|\/product-reviews\/)([A-Z0-9]{10})/i);
+        const reviewUrl = asinMatch
+          ? `https://www.amazon.in/product-reviews/${asinMatch[1]}`
+          : this.url;
+
+        const discussionResult = await this.callDiscussionApi(reviewUrl);
         if (discussionResult.posts.length > 0) {
           posts = discussionResult.posts;
-          if (!listingTitle && discussionResult.title) {
+          if (!listingTitle && discussionResult.title && !/(?:1996-|amazon\.com|robot check)/i.test(discussionResult.title)) {
             listingTitle = discussionResult.title;
           }
         }
@@ -397,19 +408,34 @@ export class DiffbotAdapter extends BaseAdapter {
       timeout: 35000,
     };
 
-    const res = await axios.get<DiffbotExtractResponse>(endpoint, {
-      params,
-      headers: { Accept: 'application/json' },
-      timeout: 45000,
-    });
+    try {
+      const res = await axios.get<DiffbotExtractResponse>(endpoint, {
+        params,
+        headers: { Accept: 'application/json' },
+        timeout: 45000,
+      });
 
-    this.checkDiffbotErrors(res.data);
+      this.checkDiffbotErrors(res.data);
 
-    const firstObj = res.data.objects?.[0];
-    const title = firstObj?.title;
-    const posts = firstObj?.discussion?.posts || [];
+      const firstObj = res.data.objects?.[0];
+      const title = firstObj?.title;
+      const posts = firstObj?.discussion?.posts || [];
 
-    return { title, posts };
+      return { title, posts };
+    } catch (err: any) {
+      if (err.response?.status === 429) {
+        console.warn('[Diffbot] 429 rate limit hit, waiting 3.5s before retry...');
+        await new Promise((r) => setTimeout(r, 3500));
+        const res = await axios.get<DiffbotExtractResponse>(endpoint, {
+          params,
+          headers: { Accept: 'application/json' },
+          timeout: 45000,
+        });
+        const firstObj = res.data.objects?.[0];
+        return { title: firstObj?.title, posts: firstObj?.discussion?.posts || [] };
+      }
+      throw err;
+    }
   }
 
   /**
@@ -425,19 +451,34 @@ export class DiffbotAdapter extends BaseAdapter {
       timeout: 35000,
     };
 
-    const res = await axios.get<DiffbotExtractResponse>(endpoint, {
-      params,
-      headers: { Accept: 'application/json' },
-      timeout: 45000,
-    });
+    try {
+      const res = await axios.get<DiffbotExtractResponse>(endpoint, {
+        params,
+        headers: { Accept: 'application/json' },
+        timeout: 45000,
+      });
 
-    this.checkDiffbotErrors(res.data);
+      this.checkDiffbotErrors(res.data);
 
-    const firstObj = res.data.objects?.[0];
-    const title = firstObj?.title;
-    const posts = firstObj?.posts || [];
+      const firstObj = res.data.objects?.[0];
+      const title = firstObj?.title;
+      const posts = firstObj?.posts || [];
 
-    return { title, posts };
+      return { title, posts };
+    } catch (err: any) {
+      if (err.response?.status === 429) {
+        console.warn('[Diffbot Discussion] 429 rate limit hit, waiting 3.5s before retry...');
+        await new Promise((r) => setTimeout(r, 3500));
+        const res = await axios.get<DiffbotExtractResponse>(endpoint, {
+          params,
+          headers: { Accept: 'application/json' },
+          timeout: 45000,
+        });
+        const firstObj = res.data.objects?.[0];
+        return { title: firstObj?.title, posts: firstObj?.posts || [] };
+      }
+      throw err;
+    }
   }
 
   /**

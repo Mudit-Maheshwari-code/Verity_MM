@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { SearchRequest, SearchResponse, SourceMeta } from '@verity/shared';
 import {
@@ -15,6 +16,36 @@ import { getCached, setCached, normalizeCacheKey } from '../cache';
 import { getReportFromDb, saveReport } from '../db';
 
 const router = Router();
+
+/**
+ * Expand shortened marketplace URLs (amzn.in, amzn.to, fkrt.it, bit.ly)
+ * to their canonical product URLs before extraction.
+ */
+async function resolveShortUrl(rawUrl: string): Promise<string> {
+  if (/amzn\.(in|to)|fkrt\.it|bit\.ly|tinyurl\.com/i.test(rawUrl)) {
+    try {
+      console.log(`[Search] Expanding shortened URL: ${rawUrl}`);
+      const resp = await axios.get(rawUrl, {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        },
+        maxRedirects: 5,
+        timeout: 10000,
+        validateStatus: (status) => status < 400,
+      });
+      const resolved = resp.request?.res?.responseUrl;
+      if (resolved && resolved.startsWith('http')) {
+        console.log(`[Search] Expanded to: ${resolved}`);
+        return resolved;
+      }
+    } catch (e: any) {
+      console.warn(`[Search] Failed to expand shortened URL: ${e.message}`);
+    }
+  }
+  return rawUrl;
+}
 
 // ── Adapter architecture ──────────────────────────────────────────────────────
 // Diffbot Extract API is the primary live data-fetching layer for all URLs.
@@ -58,18 +89,20 @@ router.post('/', async (req: Request, res: Response) => {
   // ── Determine active adapters ───────────────────────────────────────────────
   const isUrl = q.startsWith('http://') || q.startsWith('https://');
   let activeAdapters: BaseAdapter[] = [];
+  let targetUrl = q;
 
   if (isUrl) {
-    const diffbot = new DiffbotAdapter(q);
+    targetUrl = await resolveShortUrl(q);
+    const diffbot = new DiffbotAdapter(targetUrl);
     if (diffbot.isAvailable()) {
-      console.log(`[Search] Routing URL "${q}" to Diffbot Extract API`);
+      console.log(`[Search] Routing URL "${targetUrl}" to Diffbot Extract API`);
       activeAdapters = [diffbot];
     } else {
       console.warn(`[Search] DIFFBOT_TOKEN not found — falling back to Playwright scraper adapter`);
       try {
-        activeAdapters = [new PlaywrightScraperAdapter(q)];
+        activeAdapters = [new PlaywrightScraperAdapter(targetUrl)];
       } catch (err) {
-        console.warn(`[Search] Unsupported URL for Playwright fallback: ${q}`);
+        console.warn(`[Search] Unsupported URL for Playwright fallback: ${targetUrl}`);
       }
     }
   }
@@ -90,7 +123,7 @@ router.post('/', async (req: Request, res: Response) => {
   } else {
     // Live mode: fan out to all available real adapters in parallel
     const results = await Promise.allSettled(
-      activeAdapters.map((adapter) => adapter.fetchReviews(q))
+      activeAdapters.map((adapter) => adapter.fetchReviews(targetUrl))
     );
 
     batches = results.map((result, i) => {
@@ -106,11 +139,15 @@ router.post('/', async (req: Request, res: Response) => {
       } as RawReviewBatch;
     });
 
-    // If ALL real adapters failed, fall back to mock data
-    const allFailed = batches.every((b) => b.reviews.length === 0 && b.error);
-    if (allFailed) {
-      console.warn('[Search] All real adapters failed — falling back to demo mock data');
+    // If live adapters returned 0 reviews (e.g. anti-bot challenge or empty listing), fall back gracefully
+    const totalLiveReviews = batches.reduce((sum, b) => sum + b.reviews.length, 0);
+    if (totalLiveReviews === 0) {
+      console.warn('[Search] No live reviews captured — falling back to representative demo dataset');
+      const preservedTitle = batches.find((b) => b.listingTitle)?.listingTitle;
       batches = [mockFetchAmazon(q), mockFetchFlipkart(q)];
+      if (preservedTitle && !/(?:1996-|amazon\.com|robot check)/i.test(preservedTitle)) {
+        batches[0].listingTitle = preservedTitle;
+      }
       finalIsDemo = true;
     }
   }
